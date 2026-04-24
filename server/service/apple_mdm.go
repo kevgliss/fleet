@@ -4722,6 +4722,9 @@ func (svc *MDMAppleCheckinAndCommandService) handleRefetchDeviceResults(ctx cont
 	deviceCapacity := deviceInformationResponse.QueryResponses["DeviceCapacity"].(float64)
 	availableDeviceCapacity := deviceInformationResponse.QueryResponses["AvailableDeviceCapacity"].(float64)
 	osVersion := deviceInformationResponse.QueryResponses["OSVersion"].(string)
+	if supplementalOSVersionExtra, ok := deviceInformationResponse.QueryResponses["SupplementalOSVersionExtra"]; ok {
+		osVersion += " " + supplementalOSVersionExtra.(string)
+	}
 	var wifiMac string
 	wifiMacVal, ok := deviceInformationResponse.QueryResponses["WiFiMAC"]
 	if ok {
