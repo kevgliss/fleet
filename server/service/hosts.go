@@ -1177,15 +1177,17 @@ func (svc *Service) CleanupExpiredHosts(ctx context.Context) ([]fleet.DeletedHos
 
 	// Create activities for each deleted host
 	for _, hostDetail := range hostDetails {
+		hostExpiryWindowUnit := hostDetail.HostExpiryWindowUnit
 		if err := svc.NewActivity(
 			ctx,
 			nil, // Fleet automation user
 			fleet.ActivityTypeDeletedHost{
-				HostID:           hostDetail.ID,
-				HostDisplayName:  hostDetail.DisplayName,
-				HostSerial:       hostDetail.Serial,
-				TriggeredBy:      fleet.DeletedHostTriggeredByExpiration,
-				HostExpiryWindow: &hostDetail.HostExpiryWindow,
+				HostID:               hostDetail.ID,
+				HostDisplayName:      hostDetail.DisplayName,
+				HostSerial:           hostDetail.Serial,
+				TriggeredBy:          fleet.DeletedHostTriggeredByExpiration,
+				HostExpiryWindow:     &hostDetail.HostExpiryWindow,
+				HostExpiryWindowUnit: &hostExpiryWindowUnit,
 			},
 		); err != nil {
 			return nil, err

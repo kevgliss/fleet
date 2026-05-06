@@ -2216,8 +2216,9 @@ Modifies the Fleet's configuration with the supplied information.
 
 | Name                              | Type    | Description   |
 | ---------------------             | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| host_expiry_enabled               | boolean | When enabled, allows automatic cleanup of hosts that have not communicated with Fleet in some number of days.                                                  |
-| host_expiry_window                | integer | If a host has not communicated with Fleet in the specified number of days, it will be removed. Must be greater than 0 if host_expiry_enabled is set to true.   |
+| host_expiry_enabled               | boolean | When enabled, allows automatic cleanup of hosts that have not communicated with Fleet in the configured expiry window.                                        |
+| host_expiry_window                | integer | If a host has not communicated with Fleet in the specified window, it will be removed. Must be greater than 0 if host_expiry_enabled is set to true.          |
+| host_expiry_window_unit           | string  | Unit for host_expiry_window. Can be `days` or `hours`. If omitted, Fleet uses `days`.                                                                         |
 
 <br/>
 
@@ -2227,7 +2228,8 @@ Modifies the Fleet's configuration with the supplied information.
 {
   "host_expiry_settings": {
     "host_expiry_enabled": true,
-    "host_expiry_window": 7
+    "host_expiry_window": 7,
+    "host_expiry_window_unit": "days"
   }
 }
 ```
@@ -13011,8 +13013,9 @@ Returned when the requested name only differs from another fleet's name by lette
 
 | Name                              | Type    | Description   |
 | ---------------------             | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| host_expiry_enabled                         | boolean | When enabled, allows automatic cleanup of hosts that have not communicated with Fleet in some number of days. When disabled, defaults to the global setting.                                               |
-| host_expiry_window                          | integer | If a host has not communicated with Fleet in the specified number of days, it will be removed.                                                                                                             |
+| host_expiry_enabled                         | boolean | When enabled, allows automatic cleanup of hosts that have not communicated with Fleet in the configured expiry window. When disabled, defaults to the global setting.                                      |
+| host_expiry_window                          | integer | If a host has not communicated with Fleet in the specified window, it will be removed.                                                                                                                     |
+| host_expiry_window_unit                     | string  | Unit for host_expiry_window. Can be `days` or `hours`. If omitted, Fleet uses `days`.                                                                                                                     |
 
 
 <br/>
@@ -13023,7 +13026,8 @@ Returned when the requested name only differs from another fleet's name by lette
 {
   "host_expiry_settings": {
     "host_expiry_enabled": true,
-    "host_expiry_window": 7
+    "host_expiry_window": 7,
+    "host_expiry_window_unit": "days"
   }
 }
 ```

@@ -98,7 +98,8 @@
   },
   "host_expiry_settings": {
     "host_expiry_enabled": false,
-    "host_expiry_window": 59995
+    "host_expiry_window": 59995,
+    "host_expiry_window_unit": "hours"
   },
   "activity_expiry_settings": {
     "activity_expiry_enabled": false,

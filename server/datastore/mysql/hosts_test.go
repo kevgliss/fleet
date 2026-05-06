@@ -129,6 +129,7 @@ func TestHosts(t *testing.T) {
 		{"HostsListFailingPolicies", printReadsInTest(testHostsListFailingPolicies)},
 		{"HostsListBatchScriptExecution", testHostsListByBatchScriptExecutionStatus},
 		{"HostsExpiration", testHostsExpiration},
+		{"HostsExpirationHours", testHostsExpirationHours},
 		{"IOSHostExpiration", testIOSHostsExpiration},
 		{"DEPHostExpiration", testDEPHostsExpiration},
 		{"AppleMDMHostWithoutOrbitExpiration", testAppleMDMHostsWithoutOrbitExpiration},
@@ -5699,6 +5700,50 @@ func testHostsExpiration(t *testing.T, ds *Datastore) {
 	require.Len(t, hosts, 5)
 }
 
+func testHostsExpirationHours(t *testing.T, ds *Datastore) {
+	const hostExpiryWindowHours = 12
+
+	ctx := context.Background()
+	ac, err := ds.AppConfig(ctx)
+	require.NoError(t, err)
+	ac.HostExpirySettings.HostExpiryEnabled = true
+	ac.HostExpirySettings.HostExpiryWindow = hostExpiryWindowHours
+	ac.HostExpirySettings.HostExpiryWindowUnit = fleet.HostExpiryWindowUnitHours
+	require.NoError(t, ds.SaveAppConfig(ctx, ac))
+
+	createHost := func(id int, seenTime time.Time) uint {
+		host, err := ds.NewHost(ctx, &fleet.Host{
+			DetailUpdatedAt: time.Now(),
+			LabelUpdatedAt:  time.Now(),
+			PolicyUpdatedAt: time.Now(),
+			SeenTime:        seenTime,
+			OsqueryHostID:   ptr.String(strconv.Itoa(id)),
+			NodeKey:         ptr.String(fmt.Sprintf("%d", id)),
+			UUID:            fmt.Sprintf("%d", id),
+			Hostname:        fmt.Sprintf("foo.local%d", id),
+		})
+		require.NoError(t, err)
+		return host.ID
+	}
+
+	expiredHostID := createHost(1, time.Now().Add(-(hostExpiryWindowHours+1)*time.Hour))
+	createHost(2, time.Now().Add(-(hostExpiryWindowHours-1)*time.Hour))
+
+	filter := fleet.TeamFilter{User: test.UserAdmin}
+	hosts := listHostsCheckCount(t, ds, filter, fleet.HostListOptions{}, 2)
+	require.Len(t, hosts, 2)
+
+	hostDetails, err := ds.CleanupExpiredHosts(ctx)
+	require.NoError(t, err)
+	require.Len(t, hostDetails, 1)
+	require.Equal(t, expiredHostID, hostDetails[0].ID)
+	require.Equal(t, hostExpiryWindowHours, hostDetails[0].HostExpiryWindow)
+	require.Equal(t, fleet.HostExpiryWindowUnitHours, hostDetails[0].HostExpiryWindowUnit)
+
+	hosts = listHostsCheckCount(t, ds, filter, fleet.HostListOptions{}, 1)
+	require.Len(t, hosts, 1)
+}
+
 func testIOSHostsExpiration(t *testing.T, ds *Datastore) {
 	// iOS/iPadOS devices don't have host_seen_times, meaning they
 	// would previously rely on created_at records for removal,
@@ -5948,6 +5993,7 @@ func testTeamHostsExpiration(t *testing.T, ds *Datastore) {
 	require.NoError(t, err)
 	ac.HostExpirySettings.HostExpiryEnabled = false
 	ac.HostExpirySettings.HostExpiryWindow = hostExpiryWindow
+	ac.HostExpirySettings.HostExpiryWindowUnit = fleet.HostExpiryWindowUnitDays
 	err = ds.SaveAppConfig(context.Background(), ac)
 	require.NoError(t, err)
 

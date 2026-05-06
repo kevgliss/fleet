@@ -1770,10 +1770,11 @@ func TestCleanupExpiredHostsActivities(t *testing.T) {
 
 	// Collect all deleted host activities
 	type hostActivity struct {
-		hostID       uint
-		displayName  string
-		serial       string
-		expiryWindow int
+		hostID           uint
+		displayName      string
+		serial           string
+		expiryWindow     int
+		expiryWindowUnit fleet.HostExpiryWindowUnit
 	}
 
 	deletedHostActivities := []hostActivity{}
@@ -1791,11 +1792,13 @@ func TestCleanupExpiredHostsActivities(t *testing.T) {
 
 		if details.TriggeredBy == fleet.DeletedHostTriggeredByExpiration {
 			require.NotNil(t, details.HostExpiryWindow, "HostExpiryWindow should be set for expired hosts")
+			require.NotNil(t, details.HostExpiryWindowUnit, "HostExpiryWindowUnit should be set for expired hosts")
 			deletedHostActivities = append(deletedHostActivities, hostActivity{
-				hostID:       details.HostID,
-				displayName:  details.HostDisplayName,
-				serial:       details.HostSerial,
-				expiryWindow: *details.HostExpiryWindow,
+				hostID:           details.HostID,
+				displayName:      details.HostDisplayName,
+				serial:           details.HostSerial,
+				expiryWindow:     *details.HostExpiryWindow,
+				expiryWindowUnit: *details.HostExpiryWindowUnit,
 			})
 		}
 	}
@@ -1804,6 +1807,7 @@ func TestCleanupExpiredHostsActivities(t *testing.T) {
 
 	// Verify each host has the correct expiry window
 	for _, ha := range deletedHostActivities {
+		require.Equal(t, fleet.HostExpiryWindowUnitDays, ha.expiryWindowUnit)
 		switch ha.hostID {
 		case host1.ID:
 			require.Equal(t, "Team 1 Computer 1", ha.displayName)

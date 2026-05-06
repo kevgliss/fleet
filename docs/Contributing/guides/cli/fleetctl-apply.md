@@ -167,6 +167,7 @@ spec:
     host_expiry_settings:
       host_expiry_enabled: false
       host_expiry_window: 0
+      host_expiry_window_unit: days
     integrations:
       conditional_access_enabled: null
       google_calendar:
@@ -427,6 +428,7 @@ spec:
   host_expiry_settings:
     host_expiry_enabled: false
     host_expiry_window: 0
+    host_expiry_window_unit: days
   integrations:
     jira: null
     zendesk: null

@@ -257,6 +257,7 @@ export interface IActivityDetails {
   host_display_name?: string;
   host_display_names?: string[];
   host_expiry_window?: number;
+  host_expiry_window_unit?: "days" | "hours";
   host_id?: number;
   host_ids?: number[];
   host_count?: number;

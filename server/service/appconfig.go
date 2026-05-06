@@ -602,6 +602,9 @@ func (svc *Service) ModifyAppConfig(ctx context.Context, p []byte, applyOpts fle
 	if appConfig.ActivityExpirySettings.ActivityExpiryEnabled && appConfig.ActivityExpirySettings.ActivityExpiryWindow < 1 {
 		invalid.Append("activity_expiry_settings.activity_expiry_window", "must be greater than 0")
 	}
+	if !appConfig.HostExpirySettings.HostExpiryWindowUnit.IsValid() {
+		invalid.Append("host_expiry_settings.host_expiry_window_unit", `must be "days" or "hours"`)
+	}
 
 	if appConfig.OrgInfo.ContactURL == "" {
 		appConfig.OrgInfo.ContactURL = fleet.DefaultOrgInfoContactURL

@@ -41,9 +41,17 @@ import TeamHostExpiryToggle from "./components/TeamHostExpiryToggle";
 
 const baseClass = "team-settings";
 
+type HostExpiryWindowUnit = "days" | "hours";
+
+const HOST_EXPIRY_WINDOW_UNIT_OPTIONS = [
+  { label: "Days", value: "days" },
+  { label: "Hours", value: "hours" },
+];
+
 type ITeamSettingsFormData = {
   teamHostExpiryEnabled: boolean;
   teamHostExpiryWindow: number | string;
+  teamHostExpiryWindowUnit: HostExpiryWindowUnit;
   teamHostStatusWebhookEnabled: boolean;
   teamHostStatusWebhookDestinationUrl: string;
   teamHostStatusWebhookHostPercentage: number;
@@ -93,6 +101,7 @@ const TeamSettings = ({ location, router }: ITeamSubnavProps) => {
   const [formData, setFormData] = useState<ITeamSettingsFormData>({
     teamHostExpiryEnabled: false,
     teamHostExpiryWindow: "" as number | string,
+    teamHostExpiryWindowUnit: "days",
     teamHostStatusWebhookEnabled: false,
     teamHostStatusWebhookDestinationUrl: "",
     teamHostStatusWebhookHostPercentage: 1,
@@ -149,6 +158,7 @@ const TeamSettings = ({ location, router }: ITeamSubnavProps) => {
     host_expiry_settings: {
       host_expiry_enabled: globalHostExpiryEnabled,
       host_expiry_window: globalHostExpiryWindow,
+      host_expiry_window_unit: globalHostExpiryWindowUnit,
     },
     gitops: { gitops_mode_enabled: gitopsModeEnabled },
   } = appConfig ?? { host_expiry_settings: {}, gitops: {} };
@@ -172,6 +182,8 @@ const TeamSettings = ({ location, router }: ITeamSubnavProps) => {
             tC?.host_expiry_settings?.host_expiry_enabled ?? false,
           teamHostExpiryWindow:
             tC?.host_expiry_settings?.host_expiry_window ?? "",
+          teamHostExpiryWindowUnit:
+            tC?.host_expiry_settings?.host_expiry_window_unit ?? "days",
           // host status webhook settings
           teamHostStatusWebhookEnabled:
             tC?.webhook_settings?.host_status_webhook
@@ -244,6 +256,7 @@ const TeamSettings = ({ location, router }: ITeamSubnavProps) => {
             host_expiry_settings: {
               host_expiry_enabled: enableHostExpiry,
               host_expiry_window: castedHostExpiryWindow,
+              host_expiry_window_unit: formData.teamHostExpiryWindowUnit,
             },
             webhook_settings: {
               host_status_webhook: {
@@ -376,6 +389,7 @@ const TeamSettings = ({ location, router }: ITeamSubnavProps) => {
           <TeamHostExpiryToggle
             globalHostExpiryEnabled={globalHostExpiryEnabled}
             globalHostExpiryWindow={globalHostExpiryWindow}
+            globalHostExpiryWindowUnit={globalHostExpiryWindowUnit}
             teamExpiryEnabled={formData.teamHostExpiryEnabled}
             setTeamExpiryEnabled={(isEnabled: boolean) =>
               onInputChange({ name: "teamHostExpiryEnabled", value: isEnabled })
@@ -384,18 +398,30 @@ const TeamSettings = ({ location, router }: ITeamSubnavProps) => {
           />
         )}
         {formData.teamHostExpiryEnabled && (
-          <InputField
-            label="Host expiry window"
-            // type="text" allows `validate` to differentiate between
-            // non-numerical input and an empty input
-            type="text"
-            onChange={onInputChange}
-            parseTarget
-            name="teamHostExpiryWindow"
-            value={formData.teamHostExpiryWindow}
-            error={formErrors.host_expiry_window}
-            disabled={gitopsModeEnabled}
-          />
+          <>
+            <InputField
+              label="Host expiry window"
+              // type="text" allows `validate` to differentiate between
+              // non-numerical input and an empty input
+              type="text"
+              onChange={onInputChange}
+              parseTarget
+              name="teamHostExpiryWindow"
+              value={formData.teamHostExpiryWindow}
+              error={formErrors.host_expiry_window}
+              disabled={gitopsModeEnabled}
+            />
+            <Dropdown
+              label="Host expiry window unit"
+              options={HOST_EXPIRY_WINDOW_UNIT_OPTIONS}
+              onChange={onInputChange}
+              name="teamHostExpiryWindowUnit"
+              value={formData.teamHostExpiryWindowUnit}
+              parseTarget
+              searchable={false}
+              disabled={gitopsModeEnabled}
+            />
+          </>
         )}
         <GitOpsModeTooltipWrapper
           renderChildren={(disableChildren) => (

@@ -768,7 +768,8 @@ org_settings:
 
 The `host_expiry_settings` section lets you define if and when hosts should be automatically deleted from Fleet if they have not checked in.
 - `host_expiry_enabled` (default: `false`)
-- `host_expiry_window` if a host has not communicated with Fleet in the specified number of days, it will be removed. Must be > `0` when host expiry is enabled (default: `0`).
+- `host_expiry_window` if a host has not communicated with Fleet in the specified window, it will be removed. Must be > `0` when host expiry is enabled (default: `0`).
+- `host_expiry_window_unit` unit for `host_expiry_window`. Can be `days` or `hours`. If omitted, Fleet uses `days`.
 
 If this setting is not defined in your YAML files, unlike all other settings, it will not get reset to the default values.
 
@@ -781,6 +782,7 @@ org_settings:
   host_expiry_settings:
     host_expiry_enabled: true
     host_expiry_window: 10
+    host_expiry_window_unit: days
 ```
 
 ### org_info
