@@ -1440,6 +1440,21 @@ describe("Activity Feed", () => {
     expect(tooltipElement).toHaveAttribute("data-tip", "true");
   });
 
+  it("renders a 'deleted_host' expiration activity with an hourly expiry window", () => {
+    const activity = createMockActivity({
+      type: ActivityType.HostDeleted,
+      details: {
+        host_display_name: "Expired Host",
+        triggered_by: "expiration",
+        host_expiry_window: 12,
+        host_expiry_window_unit: "hours",
+      },
+    });
+    render(<GlobalActivityItem activity={activity} isPremiumTier />);
+
+    expect(screen.getByText("12 hours", { exact: false })).toBeInTheDocument();
+  });
+
   it("renders the correct actor for a installed_software activity without self_service", () => {
     const activity = createMockActivity({
       type: ActivityType.InstalledSoftware,

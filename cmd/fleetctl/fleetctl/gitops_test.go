@@ -2102,6 +2102,7 @@ func TestGitOpsFullTeam(t *testing.T) {
 			assert.Contains(t, string(*savedTeam.Config.AgentOptions), "distributed_denylist_duration")
 			assert.True(t, savedTeam.Config.Features.EnableHostUsers)
 			assert.Equal(t, 30, savedTeam.Config.HostExpirySettings.HostExpiryWindow)
+			assert.Equal(t, fleet.HostExpiryWindowUnitHours, savedTeam.Config.HostExpirySettings.HostExpiryWindowUnit)
 			assert.True(t, savedTeam.Config.MDM.EnableDiskEncryption)
 			assert.True(t, savedTeam.Config.MDM.RequireBitLockerPIN)
 			assert.Len(t, enrolledSecrets, 2)

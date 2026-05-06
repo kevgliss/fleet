@@ -230,8 +230,14 @@ const TAGGED_TEMPLATES = {
     );
   },
   deletedHost: (activity: IActivity) => {
-    const { host_display_name, triggered_by, host_expiry_window } =
-      activity.details || {};
+    const {
+      host_display_name,
+      triggered_by,
+      host_expiry_window,
+      host_expiry_window_unit = "days",
+    } = activity.details || {};
+    const hostExpiryWindowUnit =
+      host_expiry_window_unit === "hours" ? "hour" : "day";
 
     if (triggered_by === "expiration") {
       return (
@@ -245,7 +251,8 @@ const TAGGED_TEMPLATES = {
               </>
             }
           >
-            {host_expiry_window} day{host_expiry_window !== 1 ? "s" : ""}
+            {host_expiry_window} {hostExpiryWindowUnit}
+            {host_expiry_window !== 1 ? "s" : ""}
           </TooltipWrapper>{" "}
           of inactivity.
         </>

@@ -320,11 +320,12 @@ func (a ActivityTypeDeletedUser) WasFromAutomation() bool {
 }
 
 type ActivityTypeDeletedHost struct {
-	HostID           uint                   `json:"host_id"`
-	HostDisplayName  string                 `json:"host_display_name"`
-	HostSerial       string                 `json:"host_serial"`
-	TriggeredBy      DeletedHostTriggeredBy `json:"triggered_by"`
-	HostExpiryWindow *int                   `json:"host_expiry_window,omitempty"`
+	HostID               uint                   `json:"host_id"`
+	HostDisplayName      string                 `json:"host_display_name"`
+	HostSerial           string                 `json:"host_serial"`
+	TriggeredBy          DeletedHostTriggeredBy `json:"triggered_by"`
+	HostExpiryWindow     *int                   `json:"host_expiry_window,omitempty"`
+	HostExpiryWindowUnit *HostExpiryWindowUnit  `json:"host_expiry_window_unit,omitempty"`
 }
 
 type DeletedHostTriggeredBy string

@@ -13,6 +13,8 @@ import ActivityDataRetentionSection from "./components/ActivityDataRetentionSect
 import FeaturesSection from "./components/FeaturesSection";
 import ServerAuthenticationSection from "./components/ServerAuthenticationSection";
 
+export type HostExpiryWindowUnit = "days" | "hours";
+
 interface IAdvancedConfigFormData {
   ssoUserURL: string;
   mdmAppleServerURL: string;
@@ -21,6 +23,7 @@ interface IAdvancedConfigFormData {
   enableStartTLS?: boolean;
   enableHostExpiry: boolean;
   hostExpiryWindow: string;
+  hostExpiryWindowUnit: HostExpiryWindowUnit;
   deleteActivities: boolean;
   activityExpiryWindow: number;
   disableLiveQuery: boolean;
@@ -112,6 +115,8 @@ const Advanced = ({
       (appConfig.host_expiry_settings.host_expiry_window &&
         appConfig.host_expiry_settings.host_expiry_window.toString()) ||
       "0",
+    hostExpiryWindowUnit:
+      appConfig.host_expiry_settings.host_expiry_window_unit || "days",
     deleteActivities:
       appConfig.activity_expiry_settings.activity_expiry_enabled || false,
     activityExpiryWindow:
@@ -179,6 +184,7 @@ const Advanced = ({
         host_expiry_enabled: formData.enableHostExpiry,
         host_expiry_window:
           parseInt(formData.hostExpiryWindow, 10) || undefined,
+        host_expiry_window_unit: formData.hostExpiryWindowUnit,
       },
       activity_expiry_settings: {
         activity_expiry_enabled: formData.deleteActivities,

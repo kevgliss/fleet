@@ -126,6 +126,9 @@ func (svc *Service) NewTeam(ctx context.Context, p fleet.TeamPayload) (*fleet.Te
 	if p.HostExpirySettings != nil && p.HostExpirySettings.HostExpiryEnabled && p.HostExpirySettings.HostExpiryWindow <= 0 {
 		return nil, fleet.NewInvalidArgumentError("host_expiry_window", "must be greater than 0")
 	}
+	if p.HostExpirySettings != nil && !p.HostExpirySettings.HostExpiryWindowUnit.IsValid() {
+		return nil, fleet.NewInvalidArgumentError("host_expiry_window_unit", `must be "days" or "hours"`)
+	}
 
 	team, err = svc.ds.NewTeam(ctx, team)
 	if err != nil {
@@ -388,6 +391,9 @@ func (svc *Service) ModifyTeam(ctx context.Context, teamID uint, payload fleet.T
 	if payload.HostExpirySettings != nil {
 		if payload.HostExpirySettings.HostExpiryEnabled && payload.HostExpirySettings.HostExpiryWindow <= 0 {
 			return nil, fleet.NewInvalidArgumentError("host_expiry_window", "must be greater than 0")
+		}
+		if !payload.HostExpirySettings.HostExpiryWindowUnit.IsValid() {
+			return nil, fleet.NewInvalidArgumentError("host_expiry_window_unit", `must be "days" or "hours"`)
 		}
 		team.Config.HostExpirySettings = *payload.HostExpirySettings
 	}
@@ -1408,6 +1414,11 @@ func (svc *Service) createTeamFromSpec(
 				"host_expiry_settings.host_expiry_window", "When enabling host expiry, host expiry window must be a positive number.",
 			)
 		}
+		if !spec.HostExpirySettings.HostExpiryWindowUnit.IsValid() {
+			invalid.Append(
+				"host_expiry_settings.host_expiry_window_unit", `Host expiry window unit must be "days" or "hours".`,
+			)
+		}
 		hostExpirySettings = *spec.HostExpirySettings
 	}
 
@@ -1789,6 +1800,11 @@ func (svc *Service) editTeamFromSpec(
 		if spec.HostExpirySettings.HostExpiryEnabled && spec.HostExpirySettings.HostExpiryWindow <= 0 {
 			invalid.Append(
 				"host_expiry_settings.host_expiry_window", "When enabling host expiry, host expiry window must be a positive number.",
+			)
+		}
+		if !spec.HostExpirySettings.HostExpiryWindowUnit.IsValid() {
+			invalid.Append(
+				"host_expiry_settings.host_expiry_window_unit", `Host expiry window unit must be "days" or "hours".`,
 			)
 		}
 		team.Config.HostExpirySettings = *spec.HostExpirySettings

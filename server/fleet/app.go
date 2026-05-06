@@ -1329,8 +1329,39 @@ func (f *ServerSettings) GetQueryReportCap() int {
 
 // HostExpirySettings contains settings pertaining to automatic host expiry.
 type HostExpirySettings struct {
-	HostExpiryEnabled bool `json:"host_expiry_enabled"`
-	HostExpiryWindow  int  `json:"host_expiry_window"`
+	HostExpiryEnabled    bool                 `json:"host_expiry_enabled"`
+	HostExpiryWindow     int                  `json:"host_expiry_window"`
+	HostExpiryWindowUnit HostExpiryWindowUnit `json:"host_expiry_window_unit,omitempty"`
+}
+
+type HostExpiryWindowUnit string
+
+const (
+	HostExpiryWindowUnitDays  HostExpiryWindowUnit = "days"
+	HostExpiryWindowUnitHours HostExpiryWindowUnit = "hours"
+)
+
+func (u HostExpiryWindowUnit) IsValid() bool {
+	switch u {
+	case "", HostExpiryWindowUnitDays, HostExpiryWindowUnitHours:
+		return true
+	default:
+		return false
+	}
+}
+
+func (h HostExpirySettings) WindowUnit() HostExpiryWindowUnit {
+	if h.HostExpiryWindowUnit == "" {
+		return HostExpiryWindowUnitDays
+	}
+	return h.HostExpiryWindowUnit
+}
+
+func (h HostExpirySettings) WindowDurationHours() int {
+	if h.WindowUnit() == HostExpiryWindowUnitHours {
+		return h.HostExpiryWindow
+	}
+	return h.HostExpiryWindow * 24
 }
 
 // ActivityExpirySettings contains settings pertaining to automatic activities cleanup.

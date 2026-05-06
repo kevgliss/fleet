@@ -1765,10 +1765,11 @@ func GetEndUsers(ctx context.Context, ds Datastore, hostID uint) ([]HostEndUser,
 
 // DeletedHostDetails contains details about a host that has been deleted.
 type DeletedHostDetails struct {
-	ID               uint
-	DisplayName      string
-	Serial           string
-	HostExpiryWindow int
+	ID                   uint
+	DisplayName          string
+	Serial               string
+	HostExpiryWindow     int
+	HostExpiryWindowUnit HostExpiryWindowUnit
 }
 
 // HostMDMManagedLocalAccount represents the managed local account status for a host.

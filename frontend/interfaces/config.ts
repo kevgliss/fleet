@@ -193,6 +193,7 @@ export interface IConfig {
   host_expiry_settings: {
     host_expiry_enabled: boolean;
     host_expiry_window?: number;
+    host_expiry_window_unit?: "days" | "hours";
   };
   activity_expiry_settings: {
     activity_expiry_enabled: boolean;

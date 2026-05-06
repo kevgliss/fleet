@@ -1,0 +1,1 @@
+* Added support for configuring automatic host expiry windows in hours while preserving days as the default unit.

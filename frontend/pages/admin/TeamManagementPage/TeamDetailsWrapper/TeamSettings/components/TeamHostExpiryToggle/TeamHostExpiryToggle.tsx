@@ -6,9 +6,20 @@ import Button from "components/buttons/Button";
 
 const baseClass = "team-host-expiry-toggle";
 
+type HostExpiryWindowUnit = "days" | "hours";
+
+const formatHostExpiryWindowUnit = (
+  unit: HostExpiryWindowUnit | undefined,
+  expiryWindow?: number
+) => {
+  const normalizedUnit = unit === "hours" ? "hour" : "day";
+  return `${normalizedUnit}${expiryWindow !== 1 ? "s" : ""}`;
+};
+
 interface ITeamHostExpiryToggle {
   globalHostExpiryEnabled: boolean;
   globalHostExpiryWindow?: number;
+  globalHostExpiryWindowUnit?: HostExpiryWindowUnit;
   teamExpiryEnabled: boolean;
   setTeamExpiryEnabled: (value: boolean) => void;
   gitopsModeEnabled?: boolean;
@@ -17,6 +28,7 @@ interface ITeamHostExpiryToggle {
 const TeamHostExpiryToggle = ({
   globalHostExpiryEnabled,
   globalHostExpiryWindow,
+  globalHostExpiryWindowUnit,
   teamExpiryEnabled,
   setTeamExpiryEnabled,
   gitopsModeEnabled,
@@ -26,7 +38,12 @@ const TeamHostExpiryToggle = ({
     globalHostExpiryEnabled ? (
       <div className="help-text">
         Host expiry is globally enabled in organization settings. By default,
-        hosts expire after {globalHostExpiryWindow} days.{" "}
+        hosts expire after {globalHostExpiryWindow}{" "}
+        {formatHostExpiryWindowUnit(
+          globalHostExpiryWindowUnit,
+          globalHostExpiryWindow
+        )}
+        .{" "}
         {!teamExpiryEnabled && (
           <Button
             onClick={(e: React.MouseEvent) => {
@@ -66,7 +83,7 @@ const TeamHostExpiryToggle = ({
             <br />
             hosts that have not communicated with Fleet in
             <br />
-            the number of days specified in the{" "}
+            the expiry window specified in the{" "}
             <strong>
               Host expiry
               <br />

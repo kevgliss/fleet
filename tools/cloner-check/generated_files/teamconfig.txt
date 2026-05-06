@@ -2,6 +2,7 @@ github.com/fleetdm/fleet/v4/server/fleet/TeamConfig	AgentOptions	*json.RawMessag
 github.com/fleetdm/fleet/v4/server/fleet/TeamConfig	HostExpirySettings	fleet.HostExpirySettings
 github.com/fleetdm/fleet/v4/server/fleet/HostExpirySettings	HostExpiryEnabled	bool
 github.com/fleetdm/fleet/v4/server/fleet/HostExpirySettings	HostExpiryWindow	int
+github.com/fleetdm/fleet/v4/server/fleet/HostExpirySettings	HostExpiryWindowUnit	fleet.HostExpiryWindowUnit
 github.com/fleetdm/fleet/v4/server/fleet/TeamConfig	WebhookSettings	fleet.TeamWebhookSettings
 github.com/fleetdm/fleet/v4/server/fleet/TeamWebhookSettings	HostStatusWebhook	*fleet.HostStatusWebhookSettings
 github.com/fleetdm/fleet/v4/server/fleet/HostStatusWebhookSettings	Enable	bool

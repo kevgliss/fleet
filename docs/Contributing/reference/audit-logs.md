@@ -465,7 +465,8 @@ This activity contains the following fields:
 - "host_display_name": Display name of the deleted host.
 - "host_serial": Hardware serial number of the deleted host.
 - "triggered_by": How the deletion was triggered. Can be "manual" for manual deletions or "expiration" for automatic deletions due to host expiry settings.
-- "host_expiry_window": (Optional) The number of days configured for host expiry. Only present when "triggered_by" is "expiration".
+- "host_expiry_window": (Optional) The configured host expiry window. Only present when "triggered_by" is "expiration".
+- "host_expiry_window_unit": (Optional) The configured host expiry window unit (`days` or `hours`). Only present when "triggered_by" is "expiration".
 
 #### Example
 
@@ -475,7 +476,8 @@ This activity contains the following fields:
 	"host_display_name": "USER-WINDOWS",
 	"host_serial": "ABC123",
 	"triggered_by": "expiration",
-	"host_expiry_window": 30
+	"host_expiry_window": 30,
+	"host_expiry_window_unit": "days"
 }
 ```
 

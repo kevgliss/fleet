@@ -90,6 +90,7 @@ org_settings:
   host_expiry_settings:
     host_expiry_enabled: false
     host_expiry_window: 59995
+    host_expiry_window_unit: hours
   integrations:
     conditional_access_enabled: true
     google_calendar:

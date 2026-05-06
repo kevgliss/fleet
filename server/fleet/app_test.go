@@ -119,6 +119,44 @@ func TestMacOSUpdatesValidate(t *testing.T) {
 	})
 }
 
+func TestHostExpirySettingsWindowDurationHours(t *testing.T) {
+	cases := []struct {
+		name     string
+		settings HostExpirySettings
+		want     int
+	}{
+		{
+			name: "defaults to days",
+			settings: HostExpirySettings{
+				HostExpiryWindow: 2,
+			},
+			want: 48,
+		},
+		{
+			name: "explicit days",
+			settings: HostExpirySettings{
+				HostExpiryWindow:     3,
+				HostExpiryWindowUnit: HostExpiryWindowUnitDays,
+			},
+			want: 72,
+		},
+		{
+			name: "hours",
+			settings: HostExpirySettings{
+				HostExpiryWindow:     12,
+				HostExpiryWindowUnit: HostExpiryWindowUnitHours,
+			},
+			want: 12,
+		},
+	}
+
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
+			require.Equal(t, tt.want, tt.settings.WindowDurationHours())
+		})
+	}
+}
+
 func TestWindowsUpdatesValidate(t *testing.T) {
 	cases := []struct {
 		name    string
