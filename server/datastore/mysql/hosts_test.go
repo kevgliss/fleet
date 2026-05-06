@@ -5993,6 +5993,7 @@ func testTeamHostsExpiration(t *testing.T, ds *Datastore) {
 	require.NoError(t, err)
 	ac.HostExpirySettings.HostExpiryEnabled = false
 	ac.HostExpirySettings.HostExpiryWindow = hostExpiryWindow
+	ac.HostExpirySettings.HostExpiryWindowUnit = fleet.HostExpiryWindowUnitDays
 	err = ds.SaveAppConfig(context.Background(), ac)
 	require.NoError(t, err)
 
